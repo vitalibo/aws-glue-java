@@ -1,0 +1,3 @@
+Parameters:
+  Environment: 'dev'
+  Bucket: 'vitalibo-dev-us-west-2'

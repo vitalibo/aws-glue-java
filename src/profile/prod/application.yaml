@@ -1,0 +1,3 @@
+Parameters:
+  Environment: 'prod'
+  Bucket: 'vitalibo-prod-us-west-2'

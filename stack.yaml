@@ -1,0 +1,51 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "This template create infrastructure for demonstrate usage Java language in AWS Glue ETL jobs"
+Parameters:
+  Environment:
+    Type: String
+    Description: "Environment name"
+  Name:
+    Type: String
+    Description: "Service name"
+Resources:
+  Job:
+    Type: AWS::Glue::Job
+    Properties:
+      GlueVersion: "2.0"
+      Command:
+        Name: glueetl
+        ScriptLocation: "s3uri(src/main/scala/com/github/vitalibo/glue/Driver.scala)"
+      DefaultArguments:
+        "--job-language": scala
+        "--class": "com.github.vitalibo.glue.Driver"
+        "--extra-jars": "s3uri(target/aws-glue-java-1.0-SNAPSHOT.jar)"
+        "--job-bookmark-option": "job-bookmark-enable"
+      ExecutionProperty:
+        MaxConcurrentRuns: 2
+      MaxRetries: 0
+      NumberOfWorkers: 2
+      WorkerType: "G.1X"
+      Name: !Sub "${Environment}-${Name}-example-job"
+      Role: !Ref JobRole
+  JobRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      RoleName: !Sub "${Environment}-${Name}-example-role"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service:
+                - "glue.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      Path: "/"
+      Policies:
+        - PolicyName: "Runtime"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action: "*"
+                Resource: "*"
