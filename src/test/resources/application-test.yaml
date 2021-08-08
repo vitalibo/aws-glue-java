@@ -1,0 +1,17 @@
+Parameters:
+  Environment: 'test'
+  Bucket: 'S3Bucket'
+Jobs:
+  TestJob:
+    ExecutorCores: 1
+    Args:
+      - foo
+      - bar
+      - baz
+  FooJob:
+    Class: com.github.vitalibo.glue.job.FooJob
+    Name: FooJob
+    Args:
+      - 1
+      - 2
+      - 3

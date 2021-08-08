@@ -1,0 +1,12 @@
+Parameters:
+  Environment: 'dev'
+  Name: 'ProjectName'
+Jobs:
+  TestJob:
+    Class: com.github.vitalibo.glue.job.SampleJob
+    Name: SampleJob
+  FooJob:
+    Args:
+      - foo
+      - bar
+      - baz
