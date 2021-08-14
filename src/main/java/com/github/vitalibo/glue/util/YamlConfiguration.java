@@ -1,4 +1,4 @@
-package com.github.vitalibo.glue;
+package com.github.vitalibo.glue.util;
 
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;

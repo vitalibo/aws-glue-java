@@ -1,2 +1,5 @@
 Parameters:
   Name: 'aws-glue-java'
+Jobs:
+  ExampleJob:
+    ClassName: com.github.vitalibo.glue.job.ExampleJob
