@@ -3,13 +3,16 @@ package com.github.vitalibo.glue;
 
 import com.amazonaws.services.glue.GlueContext;
 import com.amazonaws.services.glue.util.GlueArgParser;
+import com.github.vitalibo.glue.api.java.JavaGlueContext;
+import com.github.vitalibo.glue.job.ExampleJob;
 import com.github.vitalibo.glue.util.YamlConfiguration;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.SparkContext;
 import scala.collection.JavaConversions;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
@@ -20,6 +23,12 @@ import java.util.stream.Collectors;
 public class Factory {
 
     private final YamlConfiguration config;
+
+    public static Factory getInstance() {
+        return new Factory(
+            YamlConfiguration.parseResources("/default-application.yaml"),
+            YamlConfiguration.parseResources("/application.yaml"));
+    }
 
     Factory(YamlConfiguration... configs) {
         this(Arrays.stream(configs)
@@ -33,17 +42,45 @@ public class Factory {
             GlueArgParser.getResolvedOptions(args, new String[]{"JOB_NAME"}));
         String jobName = parseJobName(options.get("JOB_NAME"));
 
-        Class<?> cls = Class.forName(config.getString(String.format("Jobs.%s.ClassName", jobName)));
-        return (Job) cls.newInstance();
+        Method method = Factory.class.getDeclaredMethod(
+            String.format("create%s", jobName), YamlConfiguration.class, String[].class);
+        return (Job) method.invoke(this, config.subconfig("Jobs." + jobName), args);
     }
 
     public Spark createSpark(String[] args) {
         final Map<String, String> options = JavaConversions.mapAsJavaMap(
             GlueArgParser.getResolvedOptions(args, new String[]{"JOB_NAME"}));
 
-        final JavaSparkContext javaSparkContext = new JavaSparkContext();
-        final GlueContext glueContext = new GlueContext(javaSparkContext.sc());
-        return new Spark(options, glueContext);
+        SparkContext sparkContext = new SparkContext();
+        GlueContext glueContext = new GlueContext(sparkContext);
+        return new Spark(options, new JavaGlueContext(glueContext));
+    }
+
+    public Job createExampleJob(YamlConfiguration config, String[] args) {
+        return new ExampleJob(
+            createSource("PeopleSource", config),
+            createSource("DepartmentSource", config),
+            createSink("SalarySink", config));
+    }
+
+    private Source createSource(String context, YamlConfiguration config) {
+        return (gc) -> gc.getSource(
+            config.getString(String.format("%s.ConnectionType", context)),
+            config.getJsonOptions(String.format("%s.ConnectionOptions", context)),
+            config.getString(String.format("%s.Format", context)),
+            config.getJsonOptions(String.format("%s.FormatOptions", context)),
+            JavaGlueContext.kwargs()
+                .transformationContext(context));
+    }
+
+    private Sink createSink(String context, YamlConfiguration config) {
+        return (gc) -> gc.getSink(
+            config.getString(String.format("%s.ConnectionType", context)),
+            config.getJsonOptions(String.format("%s.ConnectionOptions", context)),
+            config.getString(String.format("%s.Format", context)),
+            config.getJsonOptions(String.format("%s.FormatOptions", context)),
+            JavaGlueContext.kwargs()
+                .transformationContext(context));
     }
 
     private String parseJobName(String glueJobName) {
@@ -62,12 +99,6 @@ public class Factory {
 
         throw new IllegalArgumentException(
             String.format("Not found configuration for job '%s'", glueJobName));
-    }
-
-    public static Factory getInstance() {
-        return new Factory(
-            YamlConfiguration.parseResources("/default-application.yaml"),
-            YamlConfiguration.parseResources("/application.yaml"));
     }
 
 }

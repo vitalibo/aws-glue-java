@@ -2,7 +2,10 @@ package com.github.vitalibo.glue;
 
 import com.amazonaws.services.glue.GlueContext;
 import com.amazonaws.services.glue.util.Job;
-import org.apache.spark.SparkContext;
+import com.github.vitalibo.glue.api.java.JavaGlueContext;
+import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.sql.SparkSession;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
@@ -19,7 +22,11 @@ public class SparkTest {
     @Mock
     private GlueContext mockGlueContext;
     @Mock
-    private SparkContext mockSparkContext;
+    private JavaSparkContext mockJavaSparkContext;
+    @Mock
+    private SparkSession mockSparkSession;
+    @Mock
+    private SparkConf mockSparkConf;
     @Mock
     private com.github.vitalibo.glue.Job mockJob;
 
@@ -32,7 +39,7 @@ public class SparkTest {
         MockitoAnnotations.openMocks(this).close();
         options = new HashMap<>();
         options.put("JOB_NAME", "foo-bar-baz");
-        spark = new Spark(mockGlueContext, mockSparkContext, options);
+        spark = new Spark(new JavaGlueContext(mockGlueContext), mockJavaSparkContext, mockSparkSession, mockSparkConf, options);
         mockStaticJob = Mockito.mockStatic(Job.class);
     }
 

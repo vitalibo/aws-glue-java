@@ -16,6 +16,7 @@ object Driver {
     } catch {
       case e: Exception =>
         logger.error("Job failed execution", e)
+        throw e
     }
   }
 }

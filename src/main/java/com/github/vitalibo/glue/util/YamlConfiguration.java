@@ -1,5 +1,7 @@
 package com.github.vitalibo.glue.util;
 
+import com.amazonaws.services.glue.util.JsonOptions;
+import com.amazonaws.util.json.Jackson;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.yaml.snakeyaml.Yaml;
@@ -54,6 +56,18 @@ public class YamlConfiguration {
         }
 
         return obj;
+    }
+
+    public YamlConfiguration subconfig(String path) {
+        return new YamlConfiguration(getMap(path));
+    }
+
+    public Map<String, Object> getMap(String path) {
+        return (Map<String, Object>) this.get(path);
+    }
+
+    public JsonOptions getJsonOptions(String path) {
+        return new JsonOptions(Jackson.toJsonString(get(path)));
     }
 
     public String getString(String path) {
