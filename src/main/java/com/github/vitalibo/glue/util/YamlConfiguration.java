@@ -9,6 +9,7 @@ import org.yaml.snakeyaml.Yaml;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class YamlConfiguration {
@@ -67,7 +68,10 @@ public class YamlConfiguration {
     }
 
     public JsonOptions getJsonOptions(String path) {
-        return new JsonOptions(Jackson.toJsonString(get(path)));
+        return Optional.ofNullable(get(path))
+            .map(Jackson::toJsonString)
+            .map(JsonOptions::new)
+            .orElseGet(JsonOptions::empty);
     }
 
     public String getString(String path) {

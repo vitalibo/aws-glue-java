@@ -19,7 +19,7 @@ Resources:
         "--job-language": scala
         "--class": "com.github.vitalibo.glue.Driver"
         "--extra-jars": "s3uri(target/aws-glue-java-1.0-SNAPSHOT.jar)"
-        "--job-bookmark-option": "job-bookmark-enable"
+        "--job-bookmark-option": "job-bookmark-disable"
       ExecutionProperty:
         MaxConcurrentRuns: 2
       MaxRetries: 0

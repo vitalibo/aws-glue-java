@@ -8,8 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 
-import static org.apache.spark.sql.functions.avg;
-import static org.apache.spark.sql.functions.max;
+import static org.apache.spark.sql.functions.*;
 
 @RequiredArgsConstructor
 public class ExampleJob implements Job {
@@ -20,22 +19,23 @@ public class ExampleJob implements Job {
 
     @Override
     public void process(Spark spark) {
-        Dataset<Row> peoples = spark.extract(peopleSource).toDF();
-        Dataset<Row> departments = spark.extract(departmentSource).toDF();
+        Dataset<Row> departments = spark.readDF(departmentSource);
 
-        Dataset<Row> salaries = peoples
-            .filter(peoples.col("age").geq(30))
+        Dataset<Row> salaries = spark.readDF(peopleSource)
+            .filter(col("age").geq(30))
             .join(
-                spark.extract(departmentSource).toDF(),
-                peoples.col("deptId")
-                    .equalTo(departments.col("id")))
+                departments,
+                col("deptId").equalTo(
+                    col("id")))
             .groupBy(
-                departments.col("name"), peoples.col("gender"))
+                departments.col("name"),
+                col("gender"))
             .agg(
-                avg(departments.col("salary")),
-                max(peoples.col("age")));
+                avg(col("salary")).as("avg"),
+                max(col("age")).as("max"))
+            .coalesce(spark.executorInstances());
 
-        spark.load(salarySink, spark.dynamicFrame(salaries));
+        spark.writeDF(salarySink, salaries);
     }
 
 }

@@ -1,6 +1,8 @@
 package com.github.vitalibo.glue;
 
 import com.amazonaws.services.glue.util.Job;
+import com.github.vitalibo.glue.api.java.JavaDataSink;
+import com.github.vitalibo.glue.api.java.JavaDataSource;
 import com.github.vitalibo.glue.api.java.JavaDynamicFrame;
 import com.github.vitalibo.glue.api.java.JavaGlueContext;
 import lombok.RequiredArgsConstructor;
@@ -38,20 +40,38 @@ public class Spark {
             Job.commit();
         } catch (Exception e) {
             Job.reset();
+            throw e;
         }
     }
 
-    public JavaDynamicFrame extract(Source source) {
-        return source.create(jgc)
+    public JavaDataSource read(Source source) {
+        return source.create(jgc);
+    }
+
+    public JavaDynamicFrame readDynF(Source source) {
+        return read(source)
             .getDynamicFrame();
     }
 
-    public void load(Sink sink, JavaDynamicFrame frame) {
-        sink.create(jgc)
+    public Dataset<Row> readDF(Source source) {
+        return readDynF(source)
+            .toDF();
+    }
+
+    public JavaDataSink write(Sink sink) {
+        return sink.create(jgc);
+    }
+
+    public void writeDynF(Sink sink, JavaDynamicFrame frame) {
+        write(sink)
             .writeDynamicFrame(frame);
     }
 
-    public JavaDynamicFrame dynamicFrame(Dataset<Row> df) {
+    public void writeDF(Sink sink, Dataset<Row> df) {
+        writeDynF(sink, asDynF(df));
+    }
+
+    public JavaDynamicFrame asDynF(Dataset<Row> df) {
         return JavaDynamicFrame.from(df, jgc);
     }
 
