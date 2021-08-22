@@ -93,6 +93,23 @@ public class Factory {
                 .transformationContext(config.getString("TransformationContext", "")));
     }
 
+    Source createCatalogSource(YamlConfiguration config, String[] args) {
+        return (gc) -> gc.getCatalogSource(
+            config.getString("Database"),
+            config.getString("TableName"),
+            config.getString("PushDownPredicate", " "),
+            JavaGlueContext.kwargs()
+                .transformationContext(config.getString("TransformationContext", "")));
+    }
+
+    Sink createCatalogSink(YamlConfiguration config, String[] args) {
+        return (gc) -> gc.getCatalogSink(
+            config.getString("Database"),
+            config.getString("TableName"),
+            JavaGlueContext.kwargs()
+                .transformationContext(config.getString("TransformationContext", "")));
+    }
+
     private String parseJobName(String glueJobName) {
         String fullName = Arrays.stream(glueJobName.split("-"))
             .map(o -> Character.toUpperCase(o.charAt(0)) + o.substring(1))

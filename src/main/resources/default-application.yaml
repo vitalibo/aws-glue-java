@@ -26,3 +26,14 @@ Jobs:
         FormatOptions:
           separator: ","
         TransformationContext: "SalarySink"
+  DataCleaningJob:
+    ClassName: "com.github.vitalibo.glue.job.DataCleaningJob"
+    Args:
+      - Type: CatalogSource
+        Database: "payments"
+        TableName: "medicare"
+      - Type: Sink
+        ConnectionType: s3
+        ConnectionOptions:
+          path: "s3://glue-sample-target/output-dir/medicare_parquet"
+        Format: parquet
