@@ -13,9 +13,9 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 
-public final class ScalaTypes {
+public final class ScalaConverters {
 
-    private ScalaTypes() {
+    private ScalaConverters() {
     }
 
     public static <T1, T2> Tuple2<T1, T2> tuple(T1 t1, T2 t2) {
@@ -28,7 +28,7 @@ public final class ScalaTypes {
 
     @SafeVarargs
     public static <T> Seq<T> seq(T... items) {
-        return ScalaTypes.seq(Arrays.asList(items));
+        return ScalaConverters.seq(Arrays.asList(items));
     }
 
     public static <T> Seq<T> seq(Iterable<T> iterable) {

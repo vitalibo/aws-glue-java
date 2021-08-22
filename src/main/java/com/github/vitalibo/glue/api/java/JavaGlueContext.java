@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.apache.spark.sql.SparkSession;
 
+@SuppressWarnings("PMD.ExcessiveParameterList")
 @RequiredArgsConstructor
 public class JavaGlueContext {
 
@@ -129,6 +130,7 @@ public class JavaGlueContext {
         return new Kwargs("", "", JsonOptions.empty(), null);
     }
 
+    @SuppressWarnings("PMD.AvoidFieldNameMatchingMethodName")
     @AllArgsConstructor
     public static class Kwargs {
 

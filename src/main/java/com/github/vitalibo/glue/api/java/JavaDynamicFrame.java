@@ -23,8 +23,9 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static com.github.vitalibo.glue.util.ScalaTypes.*;
+import static com.github.vitalibo.glue.util.ScalaConverters.*;
 
+@SuppressWarnings(value = {"PMD.ExcessivePublicCount", "PMD.ExcessiveClassLength", "PMD.GodClass", "PMD.ExcessiveParameterList"})
 @RequiredArgsConstructor
 public class JavaDynamicFrame {
 
@@ -486,6 +487,7 @@ public class JavaDynamicFrame {
             JsonOptions.empty());
     }
 
+    @SuppressWarnings("PMD.AvoidFieldNameMatchingMethodName")
     @AllArgsConstructor
     public static class Kwargs {
 

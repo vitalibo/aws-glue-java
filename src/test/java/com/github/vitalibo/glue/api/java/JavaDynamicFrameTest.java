@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static com.github.vitalibo.glue.util.ScalaTypes.seq;
-import static com.github.vitalibo.glue.util.ScalaTypes.tuple;
+import static com.github.vitalibo.glue.util.ScalaConverters.seq;
+import static com.github.vitalibo.glue.util.ScalaConverters.tuple;
 
 public class JavaDynamicFrameTest {
 

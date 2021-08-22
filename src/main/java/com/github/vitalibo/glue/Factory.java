@@ -17,6 +17,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
+@SuppressWarnings("PMD.SingletonClassReturningNewInstance")
 @RequiredArgsConstructor
 public class Factory {
 
@@ -72,7 +73,7 @@ public class Factory {
         throw new IllegalArgumentException("Can't create job instance.");
     }
 
-    private Source createSource(YamlConfiguration config, String[] args) {
+    Source createSource(YamlConfiguration config, String[] args) {
         return (gc) -> gc.getSource(
             config.getString("ConnectionType"),
             config.getJsonOptions("ConnectionOptions"),
@@ -82,7 +83,7 @@ public class Factory {
                 .transformationContext(config.getString("TransformationContext", "")));
     }
 
-    private Sink createSink(YamlConfiguration config, String[] args) {
+    Sink createSink(YamlConfiguration config, String[] args) {
         return (gc) -> gc.getSink(
             config.getString("ConnectionType"),
             config.getJsonOptions("ConnectionOptions"),
