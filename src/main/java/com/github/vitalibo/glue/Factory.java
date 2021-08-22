@@ -4,7 +4,6 @@ package com.github.vitalibo.glue;
 import com.amazonaws.services.glue.GlueContext;
 import com.amazonaws.services.glue.util.GlueArgParser;
 import com.github.vitalibo.glue.api.java.JavaGlueContext;
-import com.github.vitalibo.glue.job.ExampleJob;
 import com.github.vitalibo.glue.util.YamlConfiguration;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -12,10 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.spark.SparkContext;
 import scala.collection.JavaConversions;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -36,15 +34,12 @@ public class Factory {
             .orElseThrow(IllegalStateException::new));
     }
 
-    @SneakyThrows
     public Job createJob(String[] args) {
         final Map<String, String> options = JavaConversions.mapAsJavaMap(
             GlueArgParser.getResolvedOptions(args, new String[]{"JOB_NAME"}));
         String jobName = parseJobName(options.get("JOB_NAME"));
 
-        Method method = Factory.class.getDeclaredMethod(
-            String.format("create%s", jobName), YamlConfiguration.class, String[].class);
-        return (Job) method.invoke(this, config.subconfig("Jobs." + jobName), args);
+        return internalCreateJob(config.asObject("Jobs." + jobName), args);
     }
 
     public Spark createSpark(String[] args) {
@@ -56,31 +51,45 @@ public class Factory {
         return new Spark(options, new JavaGlueContext(glueContext));
     }
 
-    public Job createExampleJob(YamlConfiguration config, String[] args) {
-        return new ExampleJob(
-            createSource("PeopleSource", config),
-            createSource("DepartmentSource", config),
-            createSink("SalarySink", config));
+    @SneakyThrows
+    private Job internalCreateJob(YamlConfiguration config, String[] args) {
+        final List<Object> constructorArgs = new ArrayList<>();
+        for (YamlConfiguration conf : config.asListObjects("Args")) {
+            Method method = Factory.class.getDeclaredMethod(
+                String.format("create%s", conf.getString("Type")), YamlConfiguration.class, String[].class);
+            constructorArgs.add(method.invoke(this, conf, args));
+        }
+
+        Class<?> cls = Class.forName(config.getString("ClassName"));
+        for (Constructor<?> constructor : cls.getConstructors()) {
+            try {
+                return (Job) constructor.newInstance(constructorArgs.toArray());
+            } catch (Exception e) {
+                logger.warn(e.getMessage());
+            }
+        }
+
+        throw new IllegalArgumentException("Can't create job instance.");
     }
 
-    private Source createSource(String context, YamlConfiguration config) {
+    private Source createSource(YamlConfiguration config, String[] args) {
         return (gc) -> gc.getSource(
-            config.getString(String.format("%s.ConnectionType", context)),
-            config.getJsonOptions(String.format("%s.ConnectionOptions", context)),
-            config.getString(String.format("%s.Format", context)),
-            config.getJsonOptions(String.format("%s.FormatOptions", context)),
+            config.getString("ConnectionType"),
+            config.getJsonOptions("ConnectionOptions"),
+            config.getString("Format"),
+            config.getJsonOptions("FormatOptions"),
             JavaGlueContext.kwargs()
-                .transformationContext(context));
+                .transformationContext(config.getString("TransformationContext", "")));
     }
 
-    private Sink createSink(String context, YamlConfiguration config) {
+    private Sink createSink(YamlConfiguration config, String[] args) {
         return (gc) -> gc.getSink(
-            config.getString(String.format("%s.ConnectionType", context)),
-            config.getJsonOptions(String.format("%s.ConnectionOptions", context)),
-            config.getString(String.format("%s.Format", context)),
-            config.getJsonOptions(String.format("%s.FormatOptions", context)),
+            config.getString("ConnectionType"),
+            config.getJsonOptions("ConnectionOptions"),
+            config.getString("Format"),
+            config.getJsonOptions("FormatOptions"),
             JavaGlueContext.kwargs()
-                .transformationContext(context));
+                .transformationContext(config.getString("TransformationContext", "")));
     }
 
     private String parseJobName(String glueJobName) {
@@ -89,7 +98,8 @@ public class Factory {
             .collect(Collectors.joining());
 
         @SuppressWarnings("unchecked")
-        Set<String> supportedJobs = ((Map<String, ?>) config.get("Jobs")).keySet();
+        Set<String> supportedJobs = config.get("Jobs")
+            .map(o -> ((Map<String, ?>) o).keySet()).orElse(new HashSet<>());
         for (int i = 0; i < fullName.length(); i++) {
             String subName = fullName.substring(i);
             if (supportedJobs.contains(subName)) {

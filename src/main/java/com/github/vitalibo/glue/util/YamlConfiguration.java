@@ -6,10 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.yaml.snakeyaml.Yaml;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class YamlConfiguration {
@@ -50,48 +48,66 @@ public class YamlConfiguration {
                 .merge(other.objectMap));
     }
 
-    public Object get(String path) {
+    public Optional<Object> get(String path) {
         Object obj = objectMap;
         for (String key : path.split("\\.")) {
             obj = ((Map<String, Object>) obj).get(key);
         }
 
-        return obj;
+        return Optional.ofNullable(obj);
     }
 
-    public YamlConfiguration subconfig(String path) {
-        return new YamlConfiguration(getMap(path));
+    public YamlConfiguration asObject(String path) {
+        return get(path)
+            .map(o -> (Map<String, Object>) o)
+            .map(YamlConfiguration::new)
+            .orElseGet(() -> new YamlConfiguration(new HashMap<>()));
     }
 
-    public Map<String, Object> getMap(String path) {
-        return (Map<String, Object>) this.get(path);
+    public List<YamlConfiguration> asListObjects(String path) {
+        return get(path)
+            .map(o -> (List<Map<String, Object>>) o)
+            .map(o -> o.stream()
+                .map(YamlConfiguration::new)
+                .collect(Collectors.toList()))
+            .orElseGet(ArrayList::new);
     }
 
     public JsonOptions getJsonOptions(String path) {
-        return Optional.ofNullable(get(path))
+        return get(path)
             .map(Jackson::toJsonString)
             .map(JsonOptions::new)
             .orElseGet(JsonOptions::empty);
     }
 
     public String getString(String path) {
-        return (String) this.get(path);
+        return getString(path, null);
+    }
+
+    public String getString(String path, String other) {
+        return get(path)
+            .map(o -> (String) o)
+            .orElse(other);
     }
 
     public Integer getInteger(String path) {
-        return (Integer) this.get(path);
+        return getInteger(path, null);
+    }
+
+    public Integer getInteger(String path, Integer other) {
+        return get(path)
+            .map(o -> (Integer) o)
+            .orElse(other);
     }
 
     public Double getDouble(String path) {
-        return (Double) this.get(path);
+        return getDouble(path, null);
     }
 
-    public List<String> getListString(String path) {
-        return (List<String>) this.get(path);
-    }
-
-    public List<Integer> getListInteger(String path) {
-        return (List<Integer>) this.get(path);
+    public Double getDouble(String path, Double other) {
+        return get(path)
+            .map(o -> (Double) o)
+            .orElse(other);
     }
 
 }

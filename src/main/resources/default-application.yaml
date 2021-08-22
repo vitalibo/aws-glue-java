@@ -2,22 +2,27 @@ Parameters:
   Name: 'aws-glue-java'
 Jobs:
   ExampleJob:
-    PeopleSource:
-      ConnectionType: s3
-      ConnectionOptions:
-        paths:
-          - "s3://vitalibo-dev-us-west-2/data/PeopleSource.json"
-      Format: json
-    DepartmentSource:
-      ConnectionType: s3
-      ConnectionOptions:
-        paths:
-          - "s3://vitalibo-dev-us-west-2/data/DepartmentSource.json"
-      Format: json
-    SalarySink:
-      ConnectionType: s3
-      ConnectionOptions:
-        path: "s3://vitalibo-dev-us-west-2/data/out"
-      Format: csv
-      FormatOptions:
-        separator: ","
+    ClassName: "com.github.vitalibo.glue.job.ExampleJob"
+    Args:
+      - Type: Source
+        ConnectionType: s3
+        ConnectionOptions:
+          paths:
+            - "s3://vitalibo-dev-us-west-2/data/PeopleSource.json"
+        Format: json
+        TransformationContext: "PeopleSource"
+      - Type: Source
+        ConnectionType: s3
+        ConnectionOptions:
+          paths:
+            - "s3://vitalibo-dev-us-west-2/data/DepartmentSource.json"
+        Format: json
+        TransformationContext: "DepartmentSource"
+      - Type: Sink
+        ConnectionType: s3
+        ConnectionOptions:
+          path: "s3://vitalibo-dev-us-west-2/data/out"
+        Format: csv
+        FormatOptions:
+          separator: ","
+        TransformationContext: "SalarySink"

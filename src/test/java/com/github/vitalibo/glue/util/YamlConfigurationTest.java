@@ -3,7 +3,7 @@ package com.github.vitalibo.glue.util;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
+import java.util.Optional;
 
 public class YamlConfigurationTest {
 
@@ -12,7 +12,7 @@ public class YamlConfigurationTest {
         YamlConfiguration actual = YamlConfiguration.parseResources("/application-test.yaml");
 
         Assert.assertNotNull(actual);
-        Assert.assertEquals(actual.get("Parameters.Environment"), "test");
+        Assert.assertEquals(actual.get("Parameters.Environment"), Optional.of("test"));
     }
 
     @Test
@@ -27,10 +27,8 @@ public class YamlConfigurationTest {
         Assert.assertEquals(actual.getString("Jobs.TestJob.Class"), "com.github.vitalibo.glue.job.SampleJob");
         Assert.assertEquals(actual.getString("Jobs.TestJob.Name"), "SampleJob");
         Assert.assertEquals(actual.getInteger("Jobs.TestJob.ExecutorCores"), (Integer) 1);
-        Assert.assertEquals(actual.getListString("Jobs.TestJob.Args"), Arrays.asList("foo", "bar", "baz"));
         Assert.assertEquals(actual.getString("Jobs.FooJob.Class"), "com.github.vitalibo.glue.job.FooJob");
         Assert.assertEquals(actual.getString("Jobs.FooJob.Name"), "FooJob");
-        Assert.assertEquals(actual.getListInteger("Jobs.FooJob.Args"), Arrays.asList(1, 2, 3));
     }
 
 }
