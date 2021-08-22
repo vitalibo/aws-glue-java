@@ -126,20 +126,16 @@ public class JavaGlueContext {
     }
 
     public static Kwargs kwargs() {
-        return new Kwargs(
-            "",
-            "",
-            JsonOptions.empty(),
-            null);
+        return new Kwargs("", "", JsonOptions.empty(), null);
     }
 
     @AllArgsConstructor
     public static class Kwargs {
 
-        private String redshiftTmpDir;
-        private String transformationContext;
-        private JsonOptions options;
-        private String catalogId;
+        String redshiftTmpDir;
+        String transformationContext;
+        JsonOptions options;
+        String catalogId;
 
         public Kwargs redshiftTmpDir(String redshiftTmpDir) {
             return new Kwargs(

@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -56,7 +57,7 @@ public class SparkTest {
     public void testSubmitJobFailed() {
         Mockito.doThrow(RuntimeException.class).when(mockJob).process(spark);
 
-        spark.submit(mockJob);
+        Assert.assertThrows(RuntimeException.class, () -> spark.submit(mockJob));
 
         mockStaticJob.verify(() -> Job.init("foo-bar-baz", mockGlueContext, options));
         mockStaticJob.verify(Mockito.never(), Job::commit);

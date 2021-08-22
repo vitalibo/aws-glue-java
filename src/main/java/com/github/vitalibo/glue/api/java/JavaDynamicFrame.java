@@ -121,7 +121,7 @@ public class JavaDynamicFrame {
     }
 
     public JavaDynamicFrame filter(Predicate<DynamicRecord> predicate, Kwargs kwargs) {
-        return filter(predicate, "", JavaDynamicFrame.kwargs());
+        return filter(predicate, "", kwargs);
     }
 
     public JavaDynamicFrame filter(Predicate<DynamicRecord> predicate, String errorMsg, Kwargs kwargs) {
@@ -144,7 +144,12 @@ public class JavaDynamicFrame {
     }
 
     public Optional<Schema> getSchemaIfComputed() {
-        return Optional.ofNullable(
+        Option<Schema> option = delegate.getSchemaIfComputed();
+        if (option.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(
             delegate.getSchemaIfComputed()
                 .get());
     }
@@ -271,10 +276,6 @@ public class JavaDynamicFrame {
                 kwargs.callSite,
                 kwargs.stageThreshold,
                 kwargs.totalThreshold));
-    }
-
-    public JavaDynamicFrame resolveChoice() {
-        return null;
     }
 
     @SafeVarargs
@@ -488,11 +489,11 @@ public class JavaDynamicFrame {
     @AllArgsConstructor
     public static class Kwargs {
 
-        private String transformationContext;
-        private CallSite callSite;
-        private long stageThreshold;
-        private long totalThreshold;
-        private JsonOptions options;
+        String transformationContext;
+        CallSite callSite;
+        long stageThreshold;
+        long totalThreshold;
+        JsonOptions options;
 
         public Kwargs transformationContext(String transformationContext) {
             return new Kwargs(

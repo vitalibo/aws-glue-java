@@ -23,10 +23,6 @@ public class JavaDataSource {
         return new JavaDynamicFrame(delegate.getDynamicFrame(minPartitions, targetPartitions));
     }
 
-    public boolean supportsFormat(String format) {
-        return delegate.supportsFormat(format);
-    }
-
     public Dataset<Row> getDataFrame() {
         return delegate.getDataFrame();
     }

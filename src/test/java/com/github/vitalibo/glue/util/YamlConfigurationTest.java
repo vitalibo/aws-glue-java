@@ -1,6 +1,5 @@
 package com.github.vitalibo.glue.util;
 
-import com.github.vitalibo.glue.util.YamlConfiguration;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

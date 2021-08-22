@@ -15,31 +15,29 @@ public class FactoryTest {
     @Mock
     private YamlConfiguration mockYamlConfiguration;
 
-    private Factory factory;
+    private Factory spyFactory;
 
     @BeforeMethod
     public void setUp() throws Exception {
         MockitoAnnotations.openMocks(this).close();
-        factory = new Factory(mockYamlConfiguration);
+        spyFactory = Mockito.spy(new Factory(mockYamlConfiguration));
     }
 
     @Test
     public void testCreateJob() {
-        Mockito.when(mockYamlConfiguration.getString(Mockito.anyString()))
-            .thenReturn("com.github.vitalibo.glue.FactoryTest$TestJob");
+        Mockito.doReturn(new TestExampleJob()).when(spyFactory).createExampleJob(Mockito.any(), Mockito.any());
         Mockito.when(mockYamlConfiguration.get("Jobs"))
             .thenReturn(new HashMap<String, Object>() {{
                 put("ExampleJob", null);
                 put("TestJob", null);
             }});
 
-        Job actual = factory.createJob(new String[]{"--JOB_NAME", "dev-stack-test-job"});
+        Job actual = spyFactory.createJob(new String[]{"--JOB_NAME", "dev-stack-example-job"});
 
-        Assert.assertTrue(actual instanceof TestJob);
-        Mockito.verify(mockYamlConfiguration).getString("Jobs.TestJob.ClassName");
+        Assert.assertTrue(actual instanceof TestExampleJob);
     }
 
-    public static class TestJob implements Job {
+    public static class TestExampleJob implements Job {
         @Override
         public void process(Spark spark) {
         }
