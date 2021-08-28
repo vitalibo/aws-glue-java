@@ -22,7 +22,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.github.vitalibo.glue.util.ScalaConverters.*;
+import static com.github.vitalibo.glue.util.ScalaConverters.function;
+import static com.github.vitalibo.glue.util.ScalaConverters.seq;
+import static com.github.vitalibo.glue.util.ScalaConverters.supplier;
 
 @SuppressWarnings(value = {"PMD.ExcessivePublicCount", "PMD.ExcessiveClassLength", "PMD.GodClass", "PMD.ExcessiveParameterList"})
 @RequiredArgsConstructor

@@ -16,6 +16,7 @@ import java.util.function.Function;
 import static com.github.vitalibo.glue.util.ScalaConverters.function;
 import static com.github.vitalibo.glue.util.ScalaConverters.tuple;
 
+@SuppressWarnings("PMD.SystemPrintln")
 @RequiredArgsConstructor
 public class DataCleaningJob implements Job {
 
