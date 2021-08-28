@@ -1,0 +1,65 @@
+{
+  "fields": [
+    {
+      "name": "DRG Definition",
+      "type": "string",
+      "nullable": true
+    },
+    {
+      "name": "Provider Id",
+      "type": "string",
+      "nullable": true
+    },
+    {
+      "name": "Provider Name",
+      "type": "string",
+      "nullable": true
+    },
+    {
+      "name": "Provider Street Address",
+      "type": "string",
+      "nullable": true
+    },
+    {
+      "name": "Provider City",
+      "type": "string",
+      "nullable": true
+    },
+    {
+      "name": "Provider State",
+      "type": "string",
+      "nullable": true
+    },
+    {
+      "name": "Provider Zip Code",
+      "type": "long",
+      "nullable": true
+    },
+    {
+      "name": "Hospital Referral Region Description",
+      "type": "string",
+      "nullable": true
+    },
+    {
+      "name": "Total Discharges",
+      "type": "integer",
+      "nullable": true
+    },
+    {
+      "name": "Average Covered Charges",
+      "type": "string",
+      "nullable": true
+    },
+    {
+      "name": "Average Total Payments",
+      "type": "string",
+      "nullable": true
+    },
+    {
+      "name": "Average Medicare Payments",
+      "type": "string",
+      "nullable": true
+    }
+  ],
+  "type": "struct"
+}

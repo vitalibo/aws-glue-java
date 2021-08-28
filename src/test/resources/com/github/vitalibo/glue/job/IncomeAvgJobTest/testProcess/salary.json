@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Sales and marketing",
+    "gender": "F",
+    "avg": 4900.0,
+    "max": 44
+  },
+  {
+    "name": "IT services",
+    "gender": "M",
+    "avg": 4000.0,
+    "max": 38
+  },
+  {
+    "name": "IT services",
+    "gender": "F",
+    "avg": 4600.0,
+    "max": 35
+  },
+  {
+    "name": "HR",
+    "gender": "F",
+    "avg": 2800.0,
+    "max": 41
+  },
+  {
+    "name": "Sales and marketing",
+    "gender": "M",
+    "avg": 4900.0,
+    "max": 39
+  }
+]

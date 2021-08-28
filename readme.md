@@ -13,7 +13,7 @@ or [local environment](https://docs.aws.amazon.com/glue/latest/dg/aws-glue-progr
   This sample ETL script shows you how to take advantage of both Spark and AWS Glue features to clean and transform data
   for efficient analysis. A Java version you can find in this file [DataCleaningJob.java](/src/main/java/com/github/vitalibo/glue/job/DataCleaningJob.java)
 
-- [Spark API](/src/main/java/com/github/vitalibo/glue/job/SalaryDistributionJob.java)
+- [Spark API](/src/main/java/com/github/vitalibo/glue/job/IncomeAvgJob.java)
 
   This sample ETL script show usage DataFrame and Dataset on AWS Glue.
 

@@ -1,0 +1,34 @@
+[
+  {
+    "drg": "039 - EXTRACRANIAL PROCEDURES W/O CC/MCC",
+    "provider": {
+      "id": 10001,
+      "name": "SOUTHEAST ALABAMA MEDICAL CENTER",
+      "city": "DOTHAN",
+      "state": "AL",
+      "zip": 36301
+    },
+    "rr": "AL - Dothan",
+    "charges": {
+      "covered": 32963.07,
+      "total_pay": 5777.24,
+      "medicare_pay": 4763.73
+    }
+  },
+  {
+    "drg": "039 - EXTRACRANIAL PROCEDURES W/O CC/MCC",
+    "provider": {
+      "id": 10005,
+      "name": "MARSHALL MEDICAL CENTER SOUTH",
+      "city": "BOAZ",
+      "state": "AL",
+      "zip": 35957
+    },
+    "rr": "AL - Birmingham",
+    "charges": {
+      "covered": 15131.85,
+      "total_pay": 5787.57,
+      "medicare_pay": 4976.71
+    }
+  }
+]

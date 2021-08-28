@@ -1,16 +1,19 @@
 package com.github.vitalibo.glue.util;
 
+import lombok.SneakyThrows;
+import org.apache.spark.api.java.function.Function;
+import org.apache.spark.api.java.function.Function0;
 import scala.Function1;
 import scala.Tuple2;
 import scala.Tuple4;
-import scala.collection.JavaConverters;
+import scala.collection.JavaConversions;
 import scala.collection.Seq;
 import scala.runtime.AbstractFunction0;
 import scala.runtime.AbstractFunction1;
 
+import java.io.Serializable;
 import java.util.Arrays;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.List;
 
 
 public final class ScalaConverters {
@@ -31,28 +34,31 @@ public final class ScalaConverters {
         return ScalaConverters.seq(Arrays.asList(items));
     }
 
-    public static <T> Seq<T> seq(Iterable<T> iterable) {
-        return JavaConverters.asScalaIteratorConverter(iterable.iterator())
-            .asScala()
+    public static <T> Seq<T> seq(List<T> collection) {
+        return JavaConversions.asScalaBuffer(collection)
             .toSeq();
     }
 
-    public static <K> AbstractFunction0<K> supplier(Supplier<K> supplier) {
-        return new AbstractFunction0<K>() {
-            @Override
+    public static <K> AbstractFunction0<K> supplier(Function0<K> supplier) {
+        class Wraps extends AbstractFunction0<K> implements Serializable {
+            @SneakyThrows
             public K apply() {
-                return supplier.get();
+                return supplier.call();
             }
-        };
+        }
+
+        return new Wraps();
     }
 
     public static <T1, R> Function1<T1, R> function(Function<T1, R> function) {
-        return new AbstractFunction1<T1, R>() {
-            @Override
+        class Wraps extends AbstractFunction1<T1, R> implements Serializable {
+            @SneakyThrows
             public R apply(T1 v1) {
-                return function.apply(v1);
+                return function.call(v1);
             }
-        };
+        }
+
+        return new Wraps();
     }
 
 }

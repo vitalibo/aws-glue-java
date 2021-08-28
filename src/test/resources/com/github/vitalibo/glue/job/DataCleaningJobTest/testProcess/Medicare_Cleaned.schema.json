@@ -1,0 +1,81 @@
+{
+  "fields": [
+    {
+      "name": "drg",
+      "type": "string",
+      "nullable": true
+    },
+    {
+      "name": "provider",
+      "type": {
+        "type": "struct",
+        "fields": [
+          {
+            "name": "id",
+            "type": "long",
+            "nullable": true,
+            "metadata": {}
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "nullable": true,
+            "metadata": {}
+          },
+          {
+            "name": "city",
+            "type": "string",
+            "nullable": true,
+            "metadata": {}
+          },
+          {
+            "name": "state",
+            "type": "string",
+            "nullable": true,
+            "metadata": {}
+          },
+          {
+            "name": "zip",
+            "type": "long",
+            "nullable": true,
+            "metadata": {}
+          }
+        ]
+      },
+      "nullable": true
+    },
+    {
+      "name": "rr",
+      "type": "string",
+      "nullable": true
+    },
+    {
+      "name": "charges",
+      "type": {
+        "type": "struct",
+        "fields": [
+          {
+            "name": "covered",
+            "type": "double",
+            "nullable": true,
+            "metadata": {}
+          },
+          {
+            "name": "total_pay",
+            "type": "double",
+            "nullable": true,
+            "metadata": {}
+          },
+          {
+            "name": "medicare_pay",
+            "type": "double",
+            "nullable": true,
+            "metadata": {}
+          }
+        ]
+      },
+      "nullable": true
+    }
+  ],
+  "type": "struct"
+}

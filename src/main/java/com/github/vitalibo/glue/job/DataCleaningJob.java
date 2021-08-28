@@ -13,6 +13,7 @@ import scala.Option;
 import java.util.Objects;
 import java.util.function.Function;
 
+import static com.github.vitalibo.glue.util.ScalaConverters.function;
 import static com.github.vitalibo.glue.util.ScalaConverters.tuple;
 
 @RequiredArgsConstructor
@@ -24,24 +25,24 @@ public class DataCleaningJob implements Job {
     @Override
     public void process(Spark spark) {
         JavaDynamicFrame medicareDynF = spark.readDynF(medicareSource)
-            .resolveChoice(tuple("provider id", "cast:long"))
-            .filter(o -> o.getField("provider id").exists(Objects::nonNull))
-            .map(chopFirst("average covered charges", "ACC").andThen(
-                chopFirst("average total payments", "ATP")).andThen(
-                chopFirst("average medicare payments", "AMP")));
+            .resolveChoice(tuple("Provider Id", "cast:long"))
+            .filter(o -> o.getField("Provider Id").exists(function(Objects::nonNull)))
+            .map(o -> chopFirst("Average Covered Charges", "ACC").andThen(
+                chopFirst("Average Total Payments", "ATP")).andThen(
+                chopFirst("Average Medicare Payments", "AMP")).apply(o));
 
         medicareDynF.printSchema();
-        System.out.printf("count: %s errors: %s", medicareDynF.count(), medicareDynF.errorsCount());
+        System.out.printf("count: %s errors: %s\n", medicareDynF.count(), medicareDynF.errorsCount());
         medicareDynF.errorsAsDynamicFrame().show();
 
         JavaDynamicFrame medicareNest = medicareDynF.applyMapping(
-            tuple("drg definition", "string", "drg", "string"),
-            tuple("provider id", "long", "provider.id", "long"),
-            tuple("provider name", "string", "provider.name", "string"),
-            tuple("provider city", "string", "provider.city", "string"),
-            tuple("provider state", "string", "provider.state", "string"),
-            tuple("provider zip code", "long", "provider.zip", "long"),
-            tuple("hospital referral region description", "string", "rr", "string"),
+            tuple("DRG Definition", "string", "drg", "string"),
+            tuple("Provider Id", "long", "provider.id", "long"),
+            tuple("Provider Name", "string", "provider.name", "string"),
+            tuple("Provider City", "string", "provider.city", "string"),
+            tuple("Provider State", "string", "provider.state", "string"),
+            tuple("Provider Zip Code", "long", "provider.zip", "long"),
+            tuple("Hospital Referral Region Description", "string", "rr", "string"),
             tuple("ACC", "string", "charges.covered", "double"),
             tuple("ATP", "string", "charges.total_pay", "double"),
             tuple("AMP", "string", "charges.medicare_pay", "double"));

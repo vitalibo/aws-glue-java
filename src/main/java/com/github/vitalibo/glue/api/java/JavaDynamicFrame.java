@@ -9,6 +9,8 @@ import com.amazonaws.services.glue.schema.Schema;
 import com.amazonaws.services.glue.util.JsonOptions;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.apache.spark.api.java.function.Function;
+import org.apache.spark.api.java.function.Function0;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import scala.Option;
@@ -18,9 +20,6 @@ import scala.collection.JavaConverters;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.github.vitalibo.glue.util.ScalaConverters.*;
@@ -113,22 +112,22 @@ public class JavaDynamicFrame {
             delegate.errorsAsDynamicFrame());
     }
 
-    public JavaDynamicFrame filter(Predicate<DynamicRecord> predicate) {
+    public JavaDynamicFrame filter(Function<DynamicRecord, Boolean> predicate) {
         return filter(predicate, "", JavaDynamicFrame.kwargs());
     }
 
-    public JavaDynamicFrame filter(Predicate<DynamicRecord> predicate, String errorMsg) {
+    public JavaDynamicFrame filter(Function<DynamicRecord, Boolean> predicate, String errorMsg) {
         return filter(predicate, errorMsg, JavaDynamicFrame.kwargs());
     }
 
-    public JavaDynamicFrame filter(Predicate<DynamicRecord> predicate, Kwargs kwargs) {
+    public JavaDynamicFrame filter(Function<DynamicRecord, Boolean> predicate, Kwargs kwargs) {
         return filter(predicate, "", kwargs);
     }
 
-    public JavaDynamicFrame filter(Predicate<DynamicRecord> predicate, String errorMsg, Kwargs kwargs) {
+    public JavaDynamicFrame filter(Function<DynamicRecord, Boolean> predicate, String errorMsg, Kwargs kwargs) {
         return new JavaDynamicFrame(
             delegate.filter(
-                function(predicate::test),
+                function(predicate::call),
                 errorMsg,
                 kwargs.transformationContext,
                 kwargs.callSite,
@@ -198,7 +197,7 @@ public class JavaDynamicFrame {
     public JavaDynamicFrame map(Function<DynamicRecord, DynamicRecord> function, String errorMsg, Kwargs kwargs) {
         return new JavaDynamicFrame(
             delegate.map(
-                function(function::apply),
+                function(function),
                 errorMsg,
                 kwargs.transformationContext,
                 kwargs.callSite,
@@ -452,7 +451,7 @@ public class JavaDynamicFrame {
                 kwargs.totalThreshold));
     }
 
-    public JavaDynamicFrame withFrameSchema(Supplier<Schema> supplier) {
+    public JavaDynamicFrame withFrameSchema(Function0<Schema> supplier) {
         return new JavaDynamicFrame(
             delegate.withFrameSchema(
                 supplier(supplier)));

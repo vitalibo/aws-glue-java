@@ -1,0 +1,44 @@
+[
+  {
+    "DRG Definition": "039 - EXTRACRANIAL PROCEDURES W/O CC/MCC",
+    "Provider Id": 10001,
+    "Provider Name": "SOUTHEAST ALABAMA MEDICAL CENTER",
+    "Provider Street Address": "1108 ROSS CLARK CIRCLE",
+    "Provider City": "DOTHAN",
+    "Provider State": "AL",
+    "Provider Zip Code": 36301,
+    "Hospital Referral Region Description": "AL - Dothan",
+    "Total Discharges": 91,
+    "Average Covered Charges": "$32963.07",
+    "Average Total Payments": "$5777.24",
+    "Average Medicare Payments": "$4763.73"
+  },
+  {
+    "DRG Definition": "039 - EXTRACRANIAL PROCEDURES W/O CC/MCC",
+    "Provider Id": "10005",
+    "Provider Name": "MARSHALL MEDICAL CENTER SOUTH",
+    "Provider Street Address": "2505 U S HIGHWAY 431 NORTH",
+    "Provider City": "BOAZ",
+    "Provider State": "AL",
+    "Provider Zip Code": 35957,
+    "Hospital Referral Region Description": "AL - Birmingham",
+    "Total Discharges": 14,
+    "Average Covered Charges": "$15131.85",
+    "Average Total Payments": "$5787.57",
+    "Average Medicare Payments": "$4976.71"
+  },
+  {
+    "DRG Definition": "948 - SIGNS & SYMPTOMS W/O MCC",
+    "Provider Id": "520109MILE BLUFF MEDICAL CENTER",
+    "Provider Name": "INC",
+    "Provider Street Address": "1050 DIVISION ST",
+    "Provider City": "MAUSTON",
+    "Provider State": "WI",
+    "Provider Zip Code": 53948,
+    "Hospital Referral Region Description": "WI - Madison",
+    "Total Discharges": 12,
+    "Average Covered Charges": "$11961.41",
+    "Average Total Payments": "$4619.00",
+    "Average Medicare Payments": "$3775.33"
+  }
+]

@@ -1,0 +1,20 @@
+{
+  "fields": [
+    {
+      "name": "id",
+      "type": "string",
+      "nullable": true
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "nullable": true
+    },
+    {
+      "name": "unit",
+      "type": "string",
+      "nullable": true
+    }
+  ],
+  "type": "struct"
+}

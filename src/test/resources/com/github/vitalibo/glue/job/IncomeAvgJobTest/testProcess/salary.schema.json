@@ -1,0 +1,25 @@
+{
+  "fields": [
+    {
+      "name": "name",
+      "type": "string",
+      "nullable": true
+    },
+    {
+      "name": "gender",
+      "type": "string",
+      "nullable": true
+    },
+    {
+      "name": "avg",
+      "type": "double",
+      "nullable": true
+    },
+    {
+      "name": "max",
+      "type": "integer",
+      "nullable": true
+    }
+  ],
+  "type": "struct"
+}

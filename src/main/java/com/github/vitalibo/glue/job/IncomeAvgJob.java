@@ -11,7 +11,7 @@ import org.apache.spark.sql.Row;
 import static org.apache.spark.sql.functions.*;
 
 @RequiredArgsConstructor
-public class SalaryDistributionJob implements Job {
+public class IncomeAvgJob implements Job {
 
     private final Source peopleSource;
     private final Source departmentSource;

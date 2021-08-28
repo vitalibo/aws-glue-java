@@ -1,0 +1,30 @@
+{
+  "fields": [
+    {
+      "name": "name",
+      "type": "string",
+      "nullable": true
+    },
+    {
+      "name": "age",
+      "type": "integer",
+      "nullable": true
+    },
+    {
+      "name": "gender",
+      "type": "string",
+      "nullable": true
+    },
+    {
+      "name": "deptId",
+      "type": "string",
+      "nullable": true
+    },
+    {
+      "name": "salary",
+      "type": "float",
+      "nullable": true
+    }
+  ],
+  "type": "struct"
+}
